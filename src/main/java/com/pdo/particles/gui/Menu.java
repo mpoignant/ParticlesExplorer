@@ -121,7 +121,7 @@ public class Menu extends JMenuBar {
             file = chooser.getSelectedFile().getAbsolutePath();
         }
 
-        dataBus.load(file);
+        if (file != null) dataBus.load(file);
         ((MainFrame) this.getTopLevelAncestor()).setBounds(dataBus.getMainFrameLocation().x, dataBus.getMainFrameLocation().y, dataBus
                 .getMainFrameDimension().width, dataBus.getMainFrameDimension().height);
         ((MainFrame) this.getTopLevelAncestor()).updateControls();

@@ -18,7 +18,8 @@
  **************************************************************************/
 package com.pdo.particles.gui;
 
-import ch.randelshofer.quaqua.QuaquaManager;
+//import ch.randelshofer.quaqua.QuaquaManager;
+
 import com.pdo.particles.utils.DataBus;
 
 import javax.swing.*;
@@ -51,6 +52,7 @@ public class MainFrame extends JFrame implements ComponentListener {
      * @param file The pxp file to load at startup
      */
     public MainFrame(String file) {
+        /*
         try {
             String vers = System.getProperty("os.name").toLowerCase();
             if (vers.indexOf("mac") != -1) {
@@ -60,6 +62,7 @@ public class MainFrame extends JFrame implements ComponentListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+         */
 
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
         this.setTitle("Particles Explorer");
