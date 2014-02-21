@@ -20,8 +20,8 @@
 package com.pdo.particles.utils;
 
 import com.pdo.particles.gui.DialogAbout;
-import com.pdo.particles.gui.ToolBarAnimation;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
@@ -51,38 +51,23 @@ public class DataBus {
     /**
      * The <b>play</b> icon
      */
-    public static final ImageIcon ANIM_PLAY =
-            new ImageIcon(
-                    Toolkit.getDefaultToolkit().getImage(
-                            ToolBarAnimation.class.getResource("images/anim-play.png")));
+    public static ImageIcon ANIM_PLAY;// = new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("images/anim-play.png")));
     /**
      * The <b>pause</b> icon
      */
-    public static final ImageIcon ANIM_PAUSE =
-            new ImageIcon(
-                    Toolkit.getDefaultToolkit().getImage(
-                            ToolBarAnimation.class.getResource("images/anim-pause.png")));
+    public static ImageIcon ANIM_PAUSE;// = new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("images/anim-pause.png")));
     /**
      * The <b>emitter</b> icon
      */
-    public static final ImageIcon EMIT_ON =
-            new ImageIcon(
-                    Toolkit.getDefaultToolkit().getImage(
-                            ToolBarAnimation.class.getResource("images/emit-on.png")));
+    public static ImageIcon EMIT_ON;// = new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("images/emit-on.png")));
     /**
      * The <b>emitter off</b> icon
      */
-    public static final ImageIcon EMIT_OFF =
-            new ImageIcon(
-                    Toolkit.getDefaultToolkit().getImage(
-                            ToolBarAnimation.class.getResource("images/emit-off.png")));
+    public static ImageIcon EMIT_OFF;// = new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("images/emit-off.png")));
     /**
      * The <b>reinit emitter</b> icon
      */
-    public static final ImageIcon EMIT_NEW =
-            new ImageIcon(
-                    Toolkit.getDefaultToolkit().getImage(
-                            ToolBarAnimation.class.getResource("images/emit-new.png")));
+    public static ImageIcon EMIT_NEW;// = new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("images/emit-new.png")));
     /**
      * The application logo
      */
@@ -161,13 +146,20 @@ public class DataBus {
         obstacles = new Vector();
         particlesPool = new ParticlesPool((LIFESPAN_MAX_VALUE + 1) * FLOW_MAX_VALUE);
 
-        logos = new ImageIcon[4];
-        for (int i = 1; i <= 4; i++) {
-            logos[i - 1] =
-                    new ImageIcon(
-                            Toolkit.getDefaultToolkit().getImage(
-                                    ToolBarAnimation.class.getResource(
-                                            "images/splash" + i + ".png")));
+        try {
+            ANIM_PLAY = new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("images/anim-play.png")));
+            ANIM_PAUSE = new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("images/anim-pause.png")));
+            EMIT_ON = new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("images/emit-on.png")));
+            EMIT_OFF = new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("images/emit-off.png")));
+            EMIT_NEW = new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("images/emit-new.png")));
+
+            logos = new ImageIcon[4];
+            for (int i = 1; i <= 4; i++) {
+                logos[i - 1] =
+                        new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("images/splash" + i + ".png")));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
