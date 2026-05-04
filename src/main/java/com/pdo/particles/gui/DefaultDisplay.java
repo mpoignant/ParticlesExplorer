@@ -28,7 +28,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Iterator;
 
 /**
  * The particles display
@@ -146,8 +145,7 @@ public class DefaultDisplay extends JPanel implements Runnable, MouseListener, M
                     dy *= -0.5;
                 }
 
-                for (Iterator iter = dataBus.getObstacles().iterator(); iter.hasNext();) {
-                    PdoRectangle rect = (PdoRectangle) iter.next();
+                for (PdoRectangle rect : dataBus.getObstacles()) {
                     Line2D traj = new Line2D.Double(oldx, oldy, x, y);
 
                     if (traj.intersectsLine(rect.getTop()) || traj.intersectsLine(rect.getBottom())) {
@@ -239,13 +237,8 @@ public class DefaultDisplay extends JPanel implements Runnable, MouseListener, M
     }
 
     private final void paintObstacles(Graphics2D g) {
-        for (Iterator iter = dataBus.getObstacles().iterator(); iter.hasNext();) {
-            PdoRectangle rect = (PdoRectangle) iter.next();
-            if (rect.isActive()) {
-                g.setColor(Color.red);
-            } else {
-                g.setColor(Color.gray);
-            }
+        for (PdoRectangle rect : dataBus.getObstacles()) {
+            g.setColor(rect.isActive() ? Color.red : Color.gray);
             g.fill(rect);
         }
     }
@@ -349,28 +342,15 @@ public class DefaultDisplay extends JPanel implements Runnable, MouseListener, M
     }
 
     private final boolean isValidPosition(double x, double y) {
-        int ctr = 0;
-        for (Iterator iter = dataBus.getObstacles().iterator(); iter.hasNext();) {
-            PdoRectangle rect = (PdoRectangle) iter.next();
-            if (rect.contains(x, y)) {
-                ctr++;
-            }
+        for (PdoRectangle rect : dataBus.getObstacles()) {
+            if (rect.contains(x, y)) return false;
         }
-        if (ctr > 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return true;
     }
 
     private void selectObstacle(int x, int y) {
-        for (Iterator iter = dataBus.getObstacles().iterator(); iter.hasNext();) {
-            PdoRectangle rect = (PdoRectangle) iter.next();
-            if (rect.contains((double) x, (double) y)) {
-                rect.setActive(true);
-            } else {
-                rect.setActive(false);
-            }
+        for (PdoRectangle rect : dataBus.getObstacles()) {
+            rect.setActive(rect.contains((double) x, (double) y));
         }
     }
 
@@ -527,15 +507,10 @@ public class DefaultDisplay extends JPanel implements Runnable, MouseListener, M
     }
 
     private final void menuDeleteSelectedActionPerformed(ActionEvent e) {
-        for (Iterator iter = dataBus.getObstacles().iterator(); iter.hasNext();) {
-            PdoRectangle rect = (PdoRectangle) iter.next();
-            if (rect.isActive()) {
-                dataBus.getObstacles().remove(rect);
-            }
-        }
+        dataBus.getObstacles().removeIf(PdoRectangle::isActive);
     }
 
     private final void menuDeleteAllActionPerformed(ActionEvent e) {
-        dataBus.getObstacles().removeAll(null);
+        dataBus.getObstacles().clear();
     }
 }

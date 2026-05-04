@@ -21,8 +21,7 @@ package com.pdo.particles.utils;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * A particle.
@@ -304,7 +303,7 @@ public class Particle {
     public void moveParticle(
             int width,
             int height,
-            Vector obstacles,
+            List<PdoRectangle> obstacles,
             int gravity,
             int wind,
             int bgRed,
@@ -329,8 +328,7 @@ public class Particle {
             dy *= -0.5;
         }
 
-        for (Iterator iter = obstacles.iterator(); iter.hasNext();) {
-            PdoRectangle rect = (PdoRectangle) iter.next();
+        for (PdoRectangle rect : obstacles) {
             Line2D traj =
                     new Line2D.Double(
                             (double) oldx,

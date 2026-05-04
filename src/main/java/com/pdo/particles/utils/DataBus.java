@@ -107,11 +107,11 @@ public class DataBus {
     // Evironment Wind
     private int environmentWind;
     // Display Colors
-    private Hashtable displayColors;
+    private Map<String, Color> displayColors;
     // Display Rendering Mode
     private int displayRenderingMode;
     // Obstacles
-    private Vector obstacles;
+    private List<PdoRectangle> obstacles;
     // Particles Pool
     private ParticlesPool particlesPool;
 
@@ -139,11 +139,11 @@ public class DataBus {
         environmentGravity = 1;
         environmentLifespan = 30;
         environmentWind = 0;
-        displayColors = new Hashtable();
+        displayColors = new HashMap<>();
         displayColors.put("bgColor", Color.black);
         displayColors.put("partColor", Color.white);
         displayRenderingMode = 0;
-        obstacles = new Vector();
+        obstacles = new ArrayList<>();
         particlesPool = new ParticlesPool((LIFESPAN_MAX_VALUE + 1) * FLOW_MAX_VALUE);
 
         try {
@@ -469,20 +469,10 @@ public class DataBus {
         this.environmentWind = environmentWind;
     }
 
-    /**
-     * displayColor getter
-     *
-     * @return Hashtable
-     */
     public Color getDisplayColor(String key) {
-        return (Color) this.displayColors.get(key);
+        return this.displayColors.get(key);
     }
 
-    /**
-     * getter
-     *
-     * @return Hashtable
-     */
     public void setDisplayColor(String key, Color color) {
         this.displayColors.put(key, color);
     }
@@ -508,9 +498,9 @@ public class DataBus {
     /**
      * obstacles getter
      *
-     * @return Vector
+     * @return List
      */
-    public Vector getObstacles() {
+    public List<PdoRectangle> getObstacles() {
         return this.obstacles;
     }
 
@@ -660,22 +650,16 @@ public class DataBus {
         props.put("environmentWind", "" + environmentWind);
         props.put("displayRenderingMode", "" + displayRenderingMode);
 
-        Enumeration keys = displayColors.keys();
-        Enumeration elems = displayColors.elements();
         int i = 0;
-        while (keys.hasMoreElements()) {
-            props.put("colorkey" + i, "" + keys.nextElement());
-            props.put(
-                    "colorval" + i,
-                    "" + ((Color) elems.nextElement()).getRGB());
+        for (Map.Entry<String, Color> entry : displayColors.entrySet()) {
+            props.put("colorkey" + i, entry.getKey());
+            props.put("colorval" + i, "" + entry.getValue().getRGB());
             i++;
         }
         props.put("displayColors", "" + i);
         i = 0;
-        for (Iterator iter = obstacles.iterator(); iter.hasNext();) {
-            props.put(
-                    "obstacle" + i,
-                    ((PdoRectangle) iter.next()).saveState());
+        for (PdoRectangle rect : obstacles) {
+            props.put("obstacle" + i, rect.saveState());
             i++;
         }
         props.put("obstacles", "" + i);
@@ -716,25 +700,15 @@ public class DataBus {
         out.println("environmentWind" + " : " + environmentWind);
         out.println("displayRenderingMode" + " : " + displayRenderingMode);
 
-        Enumeration keys = displayColors.keys();
-        Enumeration elems = displayColors.elements();
         int i = 0;
-        while (keys.hasMoreElements()) {
-            out.println("colorkey" + i + " : " + keys.nextElement());
-            out.println(
-                    "colorval"
-                            + i
-                            + " : "
-                            + ((Color) elems.nextElement()).getRGB());
+        for (Map.Entry<String, Color> entry : displayColors.entrySet()) {
+            out.println("colorkey" + i + " : " + entry.getKey());
+            out.println("colorval" + i + " : " + entry.getValue().getRGB());
             i++;
         }
         i = 0;
-        for (Iterator iter = obstacles.iterator(); iter.hasNext();) {
-            out.println(
-                    "obstacle"
-                            + i
-                            + " : "
-                            + ((PdoRectangle) iter.next()).saveState());
+        for (PdoRectangle rect : obstacles) {
+            out.println("obstacle" + i + " : " + rect.saveState());
             i++;
         }
     }
