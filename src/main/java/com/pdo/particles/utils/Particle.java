@@ -43,18 +43,6 @@ public class Particle {
      * Default Constructor.
      */
     public Particle() {
-        this.lifespan = 0;
-        this.age = 0;
-        double angle = Math.random() * 360;
-        oldx = x = 0 + Math.random() * Math.cos(angle) * 0;
-        oldy = y = 0 + Math.random() * Math.sin(angle) * 0;
-
-        dx = 0 * Math.random() * Math.cos(angle);
-        dy = 0 * Math.random() * Math.sin(angle);
-
-        this.red = 0;
-        this.green = 0;
-        this.blue = 0;
         this.color = Color.BLACK;
     }
 
