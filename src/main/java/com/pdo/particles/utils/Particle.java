@@ -82,7 +82,7 @@ public class Particle {
 
         this.lifespan = lifespan;
         this.age = lifespan;
-        double angle = Math.random() * 360;
+        double angle = Math.random() * Math.PI * 2;
         oldx = x = emitterX + Math.random() * Math.cos(angle) * particleInitialDistanceFromEmitter;
         oldy = y = emitterY + Math.random() * Math.sin(angle) * particleInitialDistanceFromEmitter;
 
@@ -231,7 +231,7 @@ public class Particle {
 
         this.lifespan = lifespan;
         this.age = lifespan;
-        double angle = Math.random() * 360;
+        double angle = Math.random() * Math.PI * 2;
         this.oldx = this.x = emitterX + Math.random() * Math.cos(angle) * particleInitialDistanceFromEmitter;
         this.oldy = this.y = emitterY + Math.random() * Math.sin(angle) * particleInitialDistanceFromEmitter;
 
