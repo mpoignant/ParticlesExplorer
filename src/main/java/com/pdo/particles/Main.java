@@ -23,7 +23,6 @@ import com.pdo.particles.gui.MainFrame;
 import com.pdo.particles.utils.DataBus;
 
 import java.awt.*;
-import java.util.StringTokenizer;
 
 /**
  * Main class, used to launch the application.
@@ -60,28 +59,6 @@ public class Main {
      * @param args comman line parameters
      */
     public static void main(String[] args) {
-
-        // Detecting Java Version
-        String s = System.getProperty("java.version");
-        StringTokenizer stringtokenizer = new StringTokenizer(s, ".");
-        String s1 = stringtokenizer.nextToken();
-        String s2 = stringtokenizer.nextToken();
-        boolean JAVA1_4ABOVE;
-        if (s1.equals("1")
-                && (s2.equals("1") || s2.equals("2") || s2.equals("3"))) {
-            JAVA1_4ABOVE = false;
-        } else {
-            JAVA1_4ABOVE = true;
-        }
-
-        // Use HW acceleration for 1.4 and above
-        if (JAVA1_4ABOVE) {
-            System.out.println("Using Hardware Acceleration");
-            System.setProperty("sun.java2d.ddoffscreen", "true");
-            System.setProperty("sun.java2d.ddscale", "true");
-        }
-
-
         DataBus.getInstance();
         if (args.length == 1) {
             new Main(args[0]);
