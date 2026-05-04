@@ -36,6 +36,7 @@ public class Particle {
     private double oldx, oldy;
 
     private int red, green, blue;
+    private Color color;
     private int age;
 
     /**
@@ -54,6 +55,7 @@ public class Particle {
         this.red = 0;
         this.green = 0;
         this.blue = 0;
+        this.color = Color.BLACK;
     }
 
     /**
@@ -91,6 +93,7 @@ public class Particle {
         this.red = red;
         this.green = green;
         this.blue = blue;
+        this.color = new Color(red, green, blue);
     }
 
     /**
@@ -137,6 +140,7 @@ public class Particle {
         this.red = red;
         this.green = green;
         this.blue = blue;
+        this.color = new Color(red, green, blue);
     }
 
 
@@ -191,7 +195,7 @@ public class Particle {
      * @return Color
      */
     public Color getColor() {
-        return new Color(this.red, this.green, this.blue);
+        return this.color;
     }
 
     /**
@@ -200,6 +204,7 @@ public class Particle {
      * @param color the new particle's color
      */
     public void setColor(Color color) {
+        this.color = color;
         red = color.getRed();
         green = color.getGreen();
         blue = color.getBlue();
@@ -240,6 +245,7 @@ public class Particle {
         this.red = red;
         this.green = green;
         this.blue = blue;
+        this.color = new Color(red, green, blue);
     }
 
     /**
@@ -286,6 +292,7 @@ public class Particle {
         this.red = red;
         this.green = green;
         this.blue = blue;
+        this.color = new Color(red, green, blue);
     }
 
     /**
@@ -392,6 +399,7 @@ public class Particle {
                 blue = bgBlue;
             }
         }
+        this.color = new Color(this.red, this.green, this.blue);
         age--;
     }
 }
