@@ -34,7 +34,9 @@ import java.util.*;
  * @author Poil d'Ortie
  */
 public class DataBus {
-    private static DataBus dataBus = null;
+    private static final class Holder {
+        private static final DataBus INSTANCE = new DataBus();
+    }
 
     //TODO : add constants for environment max values (lifespan, flow)
     public static final int FLOW_MAX_VALUE = 30;
@@ -169,12 +171,7 @@ public class DataBus {
      * @return DataBus
      */
     public static DataBus getInstance() {
-        if (dataBus == null) {
-            dataBus = new DataBus();
-            return dataBus;
-        } else {
-            return dataBus;
-        }
+        return Holder.INSTANCE;
     }
 
     /**
