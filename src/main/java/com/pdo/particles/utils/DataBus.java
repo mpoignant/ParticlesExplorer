@@ -124,6 +124,9 @@ public class DataBus {
     private Map<String, Color> displayColors;
     // Display Rendering Mode
     private int displayRenderingMode;
+    // Particle Size
+    private int particleMinSize;
+    private int particleMaxSize;
     // Obstacles
     private List<PdoRectangle> obstacles;
     // Particles Pool
@@ -156,7 +159,10 @@ public class DataBus {
         displayColors = new HashMap<>();
         displayColors.put("bgColor", Color.black);
         displayColors.put("partColor", Color.white);
+        displayColors.put("midColor", new Color(128, 128, 128));
         displayRenderingMode = 0;
+        particleMinSize = 1;
+        particleMaxSize = 5;
         obstacles = new ArrayList<>();
         particlesPool = new ParticlesPool((LIFESPAN_MAX_VALUE + 1) * FLOW_MAX_VALUE);
 
@@ -504,6 +510,22 @@ public class DataBus {
         this.displayRenderingMode = displayRenderingMode;
     }
 
+    public int getParticleMinSize() {
+        return this.particleMinSize;
+    }
+
+    public void setParticleMinSize(int size) {
+        this.particleMinSize = size;
+    }
+
+    public int getParticleMaxSize() {
+        return this.particleMaxSize;
+    }
+
+    public void setParticleMaxSize(int size) {
+        this.particleMaxSize = size;
+    }
+
     /**
      * obstacles getter
      *
@@ -589,6 +611,10 @@ public class DataBus {
                     Integer.parseInt(props.get("environmentWind").toString());
             displayRenderingMode =
                     Integer.parseInt(props.get("displayRenderingMode").toString());
+            particleMinSize =
+                    Integer.parseInt(props.get("particleMinSize").toString());
+            particleMaxSize =
+                    Integer.parseInt(props.get("particleMaxSize").toString());
             // boolean
             emitterMoving =
                     Boolean
@@ -658,6 +684,8 @@ public class DataBus {
         props.put("environmentLifespan", "" + environmentLifespan);
         props.put("environmentWind", "" + environmentWind);
         props.put("displayRenderingMode", "" + displayRenderingMode);
+        props.put("particleMinSize", "" + particleMinSize);
+        props.put("particleMaxSize", "" + particleMaxSize);
 
         int i = 0;
         for (Map.Entry<String, Color> entry : displayColors.entrySet()) {
@@ -708,6 +736,8 @@ public class DataBus {
         out.println("environmentLifespan" + " : " + environmentLifespan);
         out.println("environmentWind" + " : " + environmentWind);
         out.println("displayRenderingMode" + " : " + displayRenderingMode);
+        out.println("particleMinSize" + " : " + particleMinSize);
+        out.println("particleMaxSize" + " : " + particleMaxSize);
 
         int i = 0;
         for (Map.Entry<String, Color> entry : displayColors.entrySet()) {

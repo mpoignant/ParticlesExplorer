@@ -36,8 +36,12 @@ public class Particle {
     private double oldx, oldy;
 
     private int red, green, blue;
+    private int birthRed, birthGreen, birthBlue;
+    private int midRed, midGreen, midBlue;
     private Color color;
     private int age;
+    private double size;
+    private double minSize, maxSize;
 
     /**
      * Default Constructor.
@@ -178,6 +182,15 @@ public class Particle {
     }
 
     /**
+     * particle's size getter.
+     *
+     * @return double
+     */
+    public double getSize() {
+        return this.size;
+    }
+
+    /**
      * particle's color getter.
      *
      * @return Color
@@ -196,6 +209,27 @@ public class Particle {
         red = color.getRed();
         green = color.getGreen();
         blue = color.getBlue();
+    }
+
+    private void computeColorAndSize(int bgRed, int bgGreen, int bgBlue) {
+        double ratio = (lifespan > 0) ? (double) age / lifespan : 0.0;
+        if (ratio >= 0.5) {
+            double t = (ratio - 0.5) * 2.0; // 1.0=born, 0.0=mid-life
+            red   = clamp((int)(midRed   + t * (birthRed   - midRed)));
+            green = clamp((int)(midGreen + t * (birthGreen - midGreen)));
+            blue  = clamp((int)(midBlue  + t * (birthBlue  - midBlue)));
+        } else {
+            double t = ratio * 2.0; // 1.0=mid-life, 0.0=dead
+            red   = clamp((int)(bgRed   + t * (midRed   - bgRed)));
+            green = clamp((int)(bgGreen + t * (midGreen - bgGreen)));
+            blue  = clamp((int)(bgBlue  + t * (midBlue  - bgBlue)));
+        }
+        this.color = new Color(red, green, blue);
+        this.size = minSize + (maxSize - minSize) * Math.sin(Math.PI * age / Math.max(1, lifespan));
+    }
+
+    private static int clamp(int v) {
+        return Math.max(0, Math.min(255, v));
     }
 
     /**
@@ -219,7 +253,12 @@ public class Particle {
             int emitterPower,
             int red,
             int green,
-            int blue) {
+            int blue,
+            int midRed,
+            int midGreen,
+            int midBlue,
+            double minSize,
+            double maxSize) {
 
         this.lifespan = lifespan;
         this.age = lifespan;
@@ -230,9 +269,11 @@ public class Particle {
         this.dx = emitterPower * Math.random() * Math.cos(angle);
         this.dy = emitterPower * Math.random() * Math.sin(angle);
 
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
+        this.birthRed = red; this.birthGreen = green; this.birthBlue = blue;
+        this.midRed = midRed; this.midGreen = midGreen; this.midBlue = midBlue;
+        this.red = red; this.green = green; this.blue = blue;
+        this.minSize = minSize; this.maxSize = maxSize;
+        this.size = minSize;
         this.color = new Color(red, green, blue);
     }
 
@@ -261,7 +302,12 @@ public class Particle {
             int emitterPower,
             int red,
             int green,
-            int blue) {
+            int blue,
+            int midRed,
+            int midGreen,
+            int midBlue,
+            double minSize,
+            double maxSize) {
 
         this.lifespan = lifespan;
         this.age = lifespan;
@@ -277,9 +323,11 @@ public class Particle {
         this.dx = speed * Math.cos(rad);
         this.dy = speed * Math.sin(rad);
 
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
+        this.birthRed = red; this.birthGreen = green; this.birthBlue = blue;
+        this.midRed = midRed; this.midGreen = midGreen; this.midBlue = midBlue;
+        this.red = red; this.green = green; this.blue = blue;
+        this.minSize = minSize; this.maxSize = maxSize;
+        this.size = minSize;
         this.color = new Color(red, green, blue);
     }
 
@@ -353,41 +401,7 @@ public class Particle {
             }
         }
 
-        if (lifespan < 1) lifespan = 1;
-        if (bgRed >= red) {
-            red += 255 / lifespan;
-            if (red > bgRed) {
-                red = bgRed;
-            }
-        } else {
-            red -= 255 / lifespan;
-            if (red < bgRed) {
-                red = bgRed;
-            }
-        }
-        if (bgGreen >= green) {
-            green += 255 / lifespan;
-            if (green > bgGreen) {
-                green = bgGreen;
-            }
-        } else {
-            green -= 255 / lifespan;
-            if (green < bgGreen) {
-                green = bgGreen;
-            }
-        }
-        if (bgBlue >= blue) {
-            blue += 255 / lifespan;
-            if (blue > bgBlue) {
-                blue = bgBlue;
-            }
-        } else {
-            blue -= 255 / lifespan;
-            if (blue < bgBlue) {
-                blue = bgBlue;
-            }
-        }
-        this.color = new Color(this.red, this.green, this.blue);
+        computeColorAndSize(bgRed, bgGreen, bgBlue);
         age--;
     }
 }

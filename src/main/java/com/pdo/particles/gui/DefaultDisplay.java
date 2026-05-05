@@ -107,16 +107,25 @@ public class DefaultDisplay extends JPanel implements Runnable, MouseListener, M
 
     private void addParticle() {
         Color partColor = dataBus.getDisplayColor("partColor");
+        Color midColor = dataBus.getDisplayColor("midColor");
+        double minSize = dataBus.getParticleMinSize();
+        double maxSize = dataBus.getParticleMaxSize();
         for (int i = 0; i < dataBus.getNumberOfParticles(); i++) {
             if (!dataBus.isEmitterAngled()) {
                 Particle part = dataBus.getParticlesPool().getFirstFreeParticle();
-                part.reinit(dataBus.getEnvironmentLifespan(), x, y, dataBus.getParticleInitialDistanceFromEmitter(), dataBus
-                        .getEmitterPower(), partColor.getRed(), partColor.getGreen(), partColor.getBlue());
+                part.reinit(dataBus.getEnvironmentLifespan(), x, y,
+                        dataBus.getParticleInitialDistanceFromEmitter(), dataBus.getEmitterPower(),
+                        partColor.getRed(), partColor.getGreen(), partColor.getBlue(),
+                        midColor.getRed(), midColor.getGreen(), midColor.getBlue(),
+                        minSize, maxSize);
             } else {
                 Particle part = dataBus.getParticlesPool().getFirstFreeParticle();
-                part.reinit(dataBus.getEnvironmentLifespan(), x, y, dataBus.getEmitterAngle(), dataBus.getEmitterSpread(), dataBus
-                        .getParticleInitialDistanceFromEmitter(), dataBus.getEmitterPower(), partColor.getRed(), partColor.getGreen(),
-                        partColor.getBlue());
+                part.reinit(dataBus.getEnvironmentLifespan(), x, y,
+                        dataBus.getEmitterAngle(), dataBus.getEmitterSpread(),
+                        dataBus.getParticleInitialDistanceFromEmitter(), dataBus.getEmitterPower(),
+                        partColor.getRed(), partColor.getGreen(), partColor.getBlue(),
+                        midColor.getRed(), midColor.getGreen(), midColor.getBlue(),
+                        minSize, maxSize);
             }
         }
     }
@@ -210,18 +219,24 @@ public class DefaultDisplay extends JPanel implements Runnable, MouseListener, M
             Color c = particle.getColor();
             g.setColor(c);
 
+            float size = (float) Math.max(1.0, particle.getSize());
+            int isize = (int) size;
             switch (dataBus.getDisplayRenderingMode()) {
                 case 0:
+                    g.setStroke(new BasicStroke(size));
                     g.drawLine((int) (particle.getX()), (int) (particle.getY()), (int) (particle.getOldX()), (int) (particle.getOldY()));
+                    g.setStroke(new BasicStroke(1f));
                     break;
 
                 case 1:
-                    g.fillRect((int) (particle.getX() - 1), (int) (particle.getY() - 1), 3, 3);
+                    g.fillOval((int) (particle.getX() - isize / 2.0), (int) (particle.getY() - isize / 2.0), isize, isize);
                     break;
 
                 case 2:
+                    g.setStroke(new BasicStroke(size));
                     g.drawLine((int) (particle.getX()), (int) (particle.getY()), (int) (particle.getOldX()), (int) (particle.getOldY()));
-                    g.fillRect((int) (particle.getX() - 1), (int) (particle.getY() - 1), 3, 3);
+                    g.fillOval((int) (particle.getX() - isize / 2.0), (int) (particle.getY() - isize / 2.0), isize, isize);
+                    g.setStroke(new BasicStroke(1f));
                     break;
             }
 

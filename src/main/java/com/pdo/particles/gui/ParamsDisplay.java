@@ -23,6 +23,8 @@ import com.pdo.particles.utils.DataBus;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,34 +38,44 @@ public class ParamsDisplay extends JPanel {
     private DataBus dataBus = DataBus.getInstance();
 
     protected PdoColorChooser partColor;
+    protected PdoColorChooser midColor;
     protected PdoColorChooser bgColor;
     protected JComboBox typePart;
+    private JLabel labelMinSize, labelMaxSize;
+    private JSlider slideMinSize, slideMaxSize;
 
     /**
      * Default constructor.
      */
     public ParamsDisplay() {
-        super(new GridLayout(3, 1, 1, 1));
+        super(new GridLayout(4, 1, 1, 1));
 
-        // Particles color
+        // Particles birth color
         partColor = new PdoColorChooser("partColor");
         partColor.setBorder(
-                new TitledBorder(DataBus.ETCHED_BORDER, "Particles color"));
+                new TitledBorder(DataBus.ETCHED_BORDER, "Birth color"));
         this.add(partColor);
 
-        // Background color
+        // Particles mid-life color
+        midColor = new PdoColorChooser("midColor");
+        midColor.setBorder(
+                new TitledBorder(DataBus.ETCHED_BORDER, "Mid-life color"));
+        this.add(midColor);
+
+        // Background / death color
         bgColor = new PdoColorChooser("bgColor");
         bgColor.setBorder(
-                new TitledBorder(DataBus.ETCHED_BORDER, "Background color"));
+                new TitledBorder(DataBus.ETCHED_BORDER, "Death color (background)"));
         this.add(bgColor);
 
-        // Particles look n feel
-        JPanel partT = new JPanel(new FlowLayout());
+        // Particles look n feel + size
+        JPanel partT = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 2));
         partT.setBorder(new TitledBorder(DataBus.ETCHED_BORDER, "Particle"));
         this.add(partT);
+
         typePart = new JComboBox();
         typePart.addItem("Line");
-        typePart.addItem("Square");
+        typePart.addItem("Dot");
         typePart.addItem("Both");
         typePart.setSelectedIndex(dataBus.getDisplayRenderingMode());
         typePart.addActionListener(new ActionListener() {
@@ -72,6 +84,34 @@ public class ParamsDisplay extends JPanel {
             }
         });
         partT.add(typePart);
+
+        labelMinSize = new JLabel("Min size: " + dataBus.getParticleMinSize());
+        partT.add(labelMinSize);
+        slideMinSize = new JSlider(1, 20, dataBus.getParticleMinSize());
+        slideMinSize.setPreferredSize(new Dimension(80, 18));
+        slideMinSize.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                int v = slideMinSize.getValue();
+                if (v > slideMaxSize.getValue()) slideMaxSize.setValue(v);
+                dataBus.setParticleMinSize(v);
+                labelMinSize.setText("Min size: " + v);
+            }
+        });
+        partT.add(slideMinSize);
+
+        labelMaxSize = new JLabel("Max size: " + dataBus.getParticleMaxSize());
+        partT.add(labelMaxSize);
+        slideMaxSize = new JSlider(1, 20, dataBus.getParticleMaxSize());
+        slideMaxSize.setPreferredSize(new Dimension(80, 18));
+        slideMaxSize.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                int v = slideMaxSize.getValue();
+                if (v < slideMinSize.getValue()) slideMinSize.setValue(v);
+                dataBus.setParticleMaxSize(v);
+                labelMaxSize.setText("Max size: " + v);
+            }
+        });
+        partT.add(slideMaxSize);
     }
 
     private final void typePartActionPerformed(ActionEvent e) {
